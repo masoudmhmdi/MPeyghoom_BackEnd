@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPeyghoom", "MPeyghoom\MPeyghoom.csproj", "{AE733C9A-2A31-4248-9EF9-3CABAE86A5CE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F120EC79-BD70-4E7A-BC5A-42118E671A53}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE733C9A-2A31-4248-9EF9-3CABAE86A5CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE733C9A-2A31-4248-9EF9-3CABAE86A5CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE733C9A-2A31-4248-9EF9-3CABAE86A5CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE733C9A-2A31-4248-9EF9-3CABAE86A5CE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

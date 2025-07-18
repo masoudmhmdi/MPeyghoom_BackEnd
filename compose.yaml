@@ -1,0 +1,7 @@
+﻿services:
+  mpeyghoom:
+    image: mpeyghoom
+    build:
+      context: .
+      dockerfile: MPeyghoom/Dockerfile
+
