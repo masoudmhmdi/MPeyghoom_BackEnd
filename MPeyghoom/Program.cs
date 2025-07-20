@@ -1,32 +1,42 @@
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using MPeyghoom.Hubs;
 
-var builder = WebApplication.CreateSlimBuilder(args);
 
-builder.Services.ConfigureHttpJsonOptions(options =>
+
+
+public class Program
 {
-    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
-});
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateSlimBuilder(args);
 
-var app = builder.Build();
+        builder.Services.AddSignalR();
+        builder.Services.AddCors();
+        builder.Services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+        });
 
-var sampleTodos = new Todo[]
-{
-    new(1, "Walk the dog"),
-    new(2, "Do the dishes", DateOnly.FromDateTime(DateTime.Now)),
-    new(3, "Do the laundry", DateOnly.FromDateTime(DateTime.Now.AddDays(1))),
-    new(4, "Clean the bathroom"),
-    new(5, "Clean the car", DateOnly.FromDateTime(DateTime.Now.AddDays(2)))
-};
+        var app = builder.Build();
+        app.MapHub<ChatHub>("/chatHub");
+        app.UseCors(option =>
+        {
+            
+            option.WithOrigins("http://localhost:3000");
+            option.AllowAnyHeader();
+            option.AllowAnyMethod();
+            option.SetIsOriginAllowed((host) => true); // Allow any origin for development
+            option.AllowCredentials();
+        });
+        
 
-var todosApi = app.MapGroup("/todos");
-todosApi.MapGet("/", () => sampleTodos);
-todosApi.MapGet("/{id}", (int id) =>
-    sampleTodos.FirstOrDefault(a => a.Id == id) is { } todo
-        ? Results.Ok(todo)
-        : Results.NotFound());
+        app.Run();
 
-app.Run();
-
+    }
+    
+    
+}    
 public record Todo(int Id, string? Title, DateOnly? DueBy = null, bool IsComplete = false);
 
 [JsonSerializable(typeof(Todo[]))]
