@@ -1,5 +1,8 @@
-﻿using MPeyghoom.EndPoints.Auth;
+﻿using MPeyghoom.Configuration.MemoryCash;
+using MPeyghoom.EndPoints.Auth;
 using MPeyghoom.Hubs;
+using MPeyghoom.Services.AuthService;
+using MPeyghoom.Services.CashService;
 
 namespace MPeyghoom.Configuration;
 
@@ -12,6 +15,9 @@ public static class Configuration
         
         builder.Services.AddSignalR();
         builder.Services.AddCors();
+        builder.Services.AddSingleton<MyMemoryCache>();
+        builder.Services.AddSingleton<ICashService, CashService>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
     }
  
     
