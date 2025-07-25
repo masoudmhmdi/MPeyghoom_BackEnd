@@ -1,6 +1,7 @@
 ﻿using MPeyghoom.Configuration.MemoryCash;
 using MPeyghoom.EndPoints.Auth;
 using MPeyghoom.Hubs;
+using MPeyghoom.Options;
 using MPeyghoom.Services.AuthService;
 using MPeyghoom.Services.CashService;
 
@@ -18,6 +19,8 @@ public static class Configuration
         builder.Services.AddSingleton<MyMemoryCache>();
         builder.Services.AddSingleton<ICashService, CashService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.Configure<PeyghoomMongoDbSetting>(
+            builder.Configuration.GetSection("BookStoreDatabase"));
     }
  
     
