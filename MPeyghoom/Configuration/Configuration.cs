@@ -2,6 +2,7 @@
 using MPeyghoom.EndPoints.Auth;
 using MPeyghoom.Hubs;
 using MPeyghoom.Options;
+using MPeyghoom.Repositories;
 using MPeyghoom.Services.AuthService;
 using MPeyghoom.Services.CashService;
 
@@ -20,7 +21,8 @@ public static class Configuration
         builder.Services.AddSingleton<ICashService, CashService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.Configure<PeyghoomMongoDbSetting>(
-            builder.Configuration.GetSection("BookStoreDatabase"));
+            builder.Configuration.GetSection("PeyghoomMongoDbSetting"));
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
     }
  
     
