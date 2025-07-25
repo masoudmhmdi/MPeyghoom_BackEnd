@@ -9,6 +9,6 @@ public class User
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
 
-    [BsonElement("Name")]
-    public int PhoneNumber { get; set; } 
+    [BsonElement("phoneNumber")]
+    public long PhoneNumber { get; set; } 
 }
