@@ -2,7 +2,10 @@ using MPeyghoom.Models;
 
 namespace MPeyghoom.Repositories;
 
-public interface IUserRepository : IDisposable
+public interface IUserRepository 
 {
-    Task<List<User>> GetUserByPhoneNumber(int phoneNumber);
+    Task<User> GetUserByPhoneNumberAsync(int phoneNumber);
+    Task CreateNewUserAsync(User user);
+    Task UpdateUserAsync(User user);
+    Task DeleteUserAsync(User user);
 }

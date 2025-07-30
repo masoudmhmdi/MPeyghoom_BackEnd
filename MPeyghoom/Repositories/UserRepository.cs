@@ -7,12 +7,9 @@ namespace MPeyghoom.Repositories;
 
 public class UserRepository : IUserRepository
 {
-    private readonly IMongoDatabase _peyghoomDatabase;
-    private readonly IOptionsSnapshot<PeyghoomMongoDbSetting> _peyghoomMongoDbSetting;
-    private readonly IMongoCollection<User> _booksCollection;
+    private readonly IMongoCollection<User> _userCollection;
 
-    public UserRepository(
-        IOptionsSnapshot<PeyghoomMongoDbSetting> bookStoreDatabaseSettings){
+    public UserRepository(IOptionsSnapshot<PeyghoomMongoDbSetting> bookStoreDatabaseSettings){
         
         var mongoClient = new MongoClient(
             bookStoreDatabaseSettings.Value.ConnectionString);
@@ -20,9 +17,8 @@ public class UserRepository : IUserRepository
         var mongoDatabase = mongoClient.GetDatabase(
             bookStoreDatabaseSettings.Value.DatabaseName);
 
-        _booksCollection = mongoDatabase.GetCollection<User>(
+        _userCollection = mongoDatabase.GetCollection<User>(
             bookStoreDatabaseSettings.Value.UsersCollectionName);
-        var u = _booksCollection.Find(_ => true).ToList();
 
     }
 
@@ -31,30 +27,27 @@ public class UserRepository : IUserRepository
         // TODO release unmanaged resources here
     }
 
-    public void Dispose()
+    public async Task<User> GetUserByPhoneNumberAsync(int phoneNumber)
     {
-        ReleaseUnmanagedResources();
-//        GC.SuppressFinalize(this);
-    }
-
-    public async Task<List<User>> GetUserByPhoneNumber(int phoneNumber)
-    {
-           var users =  await _booksCollection.Find(_ => true).ToListAsync();
-        
-        var uu =  new User()
-        {
-            Id = "as;dafksd",
-            PhoneNumber = 131234
-        };
-
-
-        return users;
+        var user = await _userCollection
+            .Find(u => u.PhoneNumber == phoneNumber)
+            .FirstOrDefaultAsync();
+        return user;
 
     }
 
-
-    ~UserRepository()
+    public async Task CreateNewUserAsync(User user)
     {
-        ReleaseUnmanagedResources();
+        await _userCollection.InsertOneAsync(user);
+    }
+
+    public async Task UpdateUserAsync(User user)
+    {
+        await _userCollection.ReplaceOneAsync(x => x.Id == user.Id, user);
+    }
+
+    public async Task DeleteUserAsync(User user)
+    {
+        await _userCollection.DeleteOneAsync(x => x.Id == user.Id);
     }
 }

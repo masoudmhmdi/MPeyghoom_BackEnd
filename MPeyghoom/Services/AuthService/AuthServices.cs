@@ -1,29 +1,59 @@
-﻿using MongoDB.Driver;
-using MPeyghoom.Configuration.MemoryCash;
-using MPeyghoom.Models;
+﻿using MPeyghoom.Configuration.Result;
 using MPeyghoom.Repositories;
-using MPeyghoom.Services.AuthService;
 using MPeyghoom.Services.CashService;
+
+namespace MPeyghoom.Services.AuthService;
 
 public class AuthService : IAuthService
 {
     private readonly  ICashService _cashService;
     private readonly IUserRepository _userRepository;
+    private readonly IJwtService _jwtService;
     
-    public AuthService(ICashService cashService, IUserRepository userRepository)
+    public AuthService(
+        ICashService cashService,
+        IUserRepository userRepository,
+        IJwtService jwtService)
     {
         this._cashService = cashService;
         this._userRepository = userRepository;
+        _jwtService = jwtService;
     }
 
-    public async Task<int> GetVerificationCode(int phoneNumber)
+    public Result<int> GenerateVerificationCode(int phoneNumber)
     {
-        _cashService.SetValue("VerificationCode", phoneNumber);
+        var random = new Random();
+        var randomNumber = random.Next(100000, 1000000);
+        
+        _cashService.SetValue(phoneNumber.ToString(), randomNumber);
+        
+        return Result.Success(randomNumber);
+    }
 
-        var num = _cashService.GetValue<int>("VerificationCode");
+    public Result<string> GetTokenForValidatePhoneNumber(long phoneNumber)
+    {
+         var token = _jwtService.GenerateTokenForValidatePhoneNumber();
+         return Result.Success(token);
+    }
 
-        var x = await _userRepository.GetUserByPhoneNumber(093333);
-        return num;
+    public bool VerifyPhoneNumber(int phoneNumber, int verificationCode)
+    {
+        
+        var code = _cashService.GetValue<int>(phoneNumber.ToString());
+
+        if (code == 0)
+        {
+            return false;
+        }
+
+        if (code == verificationCode)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void RegisterUser(int phoneNumber, string name)

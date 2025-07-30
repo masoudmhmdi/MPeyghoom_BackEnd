@@ -17,7 +17,8 @@ public class CashService : ICashService
     public bool SetValue(string key, object value)
     {
         var cacheEntryOptions = new MemoryCacheEntryOptions()
-            .SetSize(1);
+            .SetSize(1)
+            .SetAbsoluteExpiration(TimeSpan.FromSeconds(120));
 
             _memoryCache.Cache.Set(key, value, cacheEntryOptions);
             return true;
